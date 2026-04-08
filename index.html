@@ -8,15 +8,15 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface2: #22263a;
+      --bg: #0d0f18;
+      --surface: #131620;
+      --surface2: #1c2030;
       --accent: #e8522a;
       --accent2: #f4a261;
-      --text: #f0f0f0;
-      --muted: #8a8fa8;
-      --border: #2e3250;
-      --radius: 12px;
+      --text: #eef0f6;
+      --muted: #7a7f99;
+      --border: #252a40;
+      --radius: 10px;
     }
 
     body {
@@ -28,50 +28,49 @@
 
     /* ── Header ── */
     header {
-      background: linear-gradient(135deg, #1a0a05 0%, #2d1508 50%, #1a0a05 100%);
+      background: linear-gradient(160deg, #1f0b04 0%, #2e1208 60%, #1a0a05 100%);
       border-bottom: 1px solid #3d1f0e;
-      padding: 28px 24px 24px;
+      padding: 22px 24px 18px;
       text-align: center;
     }
     header h1 {
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
       font-weight: 700;
       color: var(--accent2);
-      letter-spacing: -0.5px;
+      letter-spacing: -0.3px;
     }
-    header p {
-      color: var(--muted);
-      margin-top: 6px;
-      font-size: 0.95rem;
-    }
-    .pin { font-size: 1.2em; margin-right: 4px; }
+    header p { color: var(--muted); margin-top: 4px; font-size: 0.88rem; }
 
-    /* ── Controls ── */
+    /* ── Sticky Controls ── */
     .controls {
+      position: sticky;
+      top: 0;
+      z-index: 100;
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 8px;
       align-items: center;
       justify-content: center;
-      padding: 20px 24px;
-      background: var(--surface);
+      padding: 12px 20px;
+      background: rgba(19, 22, 32, 0.97);
+      backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.4);
     }
 
     select, button {
       font-family: inherit;
-      font-size: 0.9rem;
-      border-radius: 8px;
+      font-size: 0.82rem;
+      border-radius: 7px;
       border: 1px solid var(--border);
       cursor: pointer;
-      transition: all 0.18s ease;
+      transition: all 0.15s ease;
     }
-
     select {
       background: var(--surface2);
       color: var(--text);
-      padding: 10px 14px;
-      min-width: 160px;
+      padding: 8px 12px;
+      min-width: 145px;
     }
     select:focus { outline: none; border-color: var(--accent); }
 
@@ -79,11 +78,10 @@
       background: var(--accent);
       color: #fff;
       border: none;
-      padding: 11px 28px;
-      font-size: 1rem;
+      padding: 9px 22px;
+      font-size: 0.92rem;
       font-weight: 600;
-      border-radius: 8px;
-      letter-spacing: 0.3px;
+      border-radius: 7px;
     }
     .btn-pick:hover { background: #d44520; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,82,42,0.4); }
     .btn-pick:active { transform: translateY(0); }
@@ -92,57 +90,60 @@
       background: transparent;
       color: var(--muted);
       border-color: var(--border);
-      padding: 10px 18px;
+      padding: 8px 14px;
     }
     .btn-clear:hover { color: var(--text); border-color: var(--muted); }
 
-    .count-badge {
-      font-size: 0.82rem;
-      color: var(--muted);
-      white-space: nowrap;
-    }
+    .count-badge { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
 
     /* ── Winner Banner ── */
     #winner-banner {
       display: none;
-      margin: 24px auto;
-      max-width: 680px;
-      background: linear-gradient(135deg, #2d1508, #3d2010);
+      margin: 20px auto 0;
+      max-width: 640px;
+      background: linear-gradient(135deg, #2b1408, #3a1c0c);
       border: 2px solid var(--accent);
       border-radius: var(--radius);
-      padding: 20px 24px;
+      padding: 18px 24px;
       text-align: center;
-      animation: pop 0.3s ease;
+      animation: pop 0.25s cubic-bezier(.34,1.56,.64,1);
     }
     #winner-banner.show { display: block; }
     @keyframes pop {
-      0% { transform: scale(0.92); opacity: 0; }
+      0% { transform: scale(0.88); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
     #winner-banner .label {
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 5px;
+    }
+    #winner-banner .name { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+    #winner-banner .meta { color: var(--muted); font-size: 0.86rem; margin-top: 3px; }
+    #winner-banner .map-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 16px;
+      background: rgba(232,82,42,0.15);
+      border: 1px solid rgba(232,82,42,0.35);
+      border-radius: 6px;
       color: var(--accent2);
-      margin-bottom: 6px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: background 0.15s;
     }
-    #winner-banner .name {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-    #winner-banner .meta {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-top: 4px;
-    }
+    #winner-banner .map-link:hover { background: rgba(232,82,42,0.28); }
+
+    /* ── Main content ── */
+    .main { max-width: 1200px; margin: 0 auto; padding: 20px 20px 40px; }
 
     /* ── Grid ── */
-    .grid-wrap { padding: 24px; max-width: 1200px; margin: 0 auto; }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
     }
 
     /* ── Card ── */
@@ -150,22 +151,20 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 18px;
+      padding: 14px 16px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-      cursor: default;
-      position: relative;
+      gap: 8px;
+      transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
     }
     .card:hover {
-      border-color: var(--accent);
+      border-color: #3d4460;
       transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(232,82,42,0.12);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.35);
     }
     .card.highlighted {
-      border-color: var(--accent2);
-      box-shadow: 0 0 0 2px var(--accent2), 0 6px 24px rgba(244,162,97,0.2);
+      border-color: var(--accent2) !important;
+      box-shadow: 0 0 0 2px rgba(244,162,97,0.4), 0 4px 20px rgba(244,162,97,0.15) !important;
     }
 
     .card-top {
@@ -174,73 +173,82 @@
       align-items: flex-start;
       gap: 8px;
     }
+    .card-name { font-size: 0.97rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .price { font-size: 0.8rem; color: var(--accent2); font-weight: 700; white-space: nowrap; margin-top: 2px; }
 
-    .card-name {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.3;
-    }
-
-    .price {
-      font-size: 0.85rem;
-      color: var(--accent2);
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .tags {
+    .card-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 5px;
+      align-items: center;
     }
     .tag {
-      font-size: 0.75rem;
-      padding: 3px 9px;
+      font-size: 0.7rem;
+      padding: 2px 8px;
       border-radius: 20px;
       font-weight: 500;
     }
     .tag-cuisine {
-      background: rgba(232,82,42,0.18);
-      color: var(--accent2);
-      border: 1px solid rgba(232,82,42,0.3);
+      background: rgba(232,82,42,0.15);
+      color: #f4a261;
+      border: 1px solid rgba(232,82,42,0.25);
     }
     .tag-dist {
-      background: rgba(99,120,220,0.15);
+      background: rgba(99,120,220,0.12);
       color: #8faeff;
-      border: 1px solid rgba(99,120,220,0.25);
+      border: 1px solid rgba(99,120,220,0.2);
     }
 
-    .card-address {
-      font-size: 0.82rem;
-      color: var(--muted);
+    .card-desc {
+      font-size: 0.8rem;
+      color: #7e849e;
       line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 8px;
+      margin-top: 2px;
     }
     .card-address a {
+      font-size: 0.75rem;
       color: var(--muted);
       text-decoration: none;
       transition: color 0.15s;
     }
-    .card-address a:hover { color: var(--accent2); text-decoration: underline; }
+    .card-address a:hover { color: var(--accent2); }
+    .hours { font-size: 0.7rem; color: #555a70; white-space: nowrap; text-align: right; }
 
-    .card-desc {
-      font-size: 0.85rem;
-      color: #9098b1;
-      line-height: 1.55;
-    }
-
-    .card-footer {
+    /* ── Pagination ── */
+    .pagination {
       display: flex;
+      justify-content: center;
       align-items: center;
       gap: 6px;
-      margin-top: 4px;
+      margin-top: 28px;
+      flex-wrap: wrap;
     }
-    .hours {
-      font-size: 0.78rem;
+    .pg-btn {
+      background: var(--surface2);
       color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 7px 13px;
+      border-radius: 7px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
     }
-    .dot-open { color: #4ade80; }
-    .dot-varies { color: #facc15; }
+    .pg-btn:hover { border-color: var(--accent); color: var(--text); }
+    .pg-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+    .pg-btn:disabled { opacity: 0.3; cursor: default; }
+    .pg-ellipsis { color: var(--muted); font-size: 0.82rem; padding: 0 4px; }
 
     /* ── Empty state ── */
     .empty {
@@ -248,14 +256,14 @@
       padding: 60px 24px;
       color: var(--muted);
     }
-    .empty h3 { font-size: 1.2rem; margin-bottom: 8px; color: var(--text); }
+    .empty h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--text); }
   </style>
 </head>
 <body>
 
 <header>
-  <h1><span class="pin">📍</span>O'Fallon, MO Restaurant Picker</h1>
-  <p>O'Fallon, MO &amp; surrounding area &nbsp;·&nbsp; Local spots to 20 miles out</p>
+  <h1>📍 O'Fallon, MO Restaurant Picker</h1>
+  <p>O'Fallon &amp; surrounding area &nbsp;·&nbsp; Local spots to 20 miles out</p>
 </header>
 
 <div class="controls">
@@ -263,15 +271,15 @@
     <option value="all">All Cuisines</option>
     <option value="American">American</option>
     <option value="BBQ">BBQ</option>
+    <option value="Breakfast">Breakfast</option>
+    <option value="Burgers">Burgers</option>
     <option value="Italian">Italian</option>
     <option value="Mexican">Mexican</option>
     <option value="Asian">Asian</option>
-    <option value="Seafood">Seafood</option>
-    <option value="Burgers">Burgers</option>
-    <option value="Pub">Pub / Bar</option>
     <option value="Pizza">Pizza</option>
+    <option value="Pub">Pub / Bar</option>
+    <option value="Seafood">Seafood</option>
     <option value="Steakhouse">Steakhouse</option>
-    <option value="Breakfast">Breakfast</option>
   </select>
 
   <select id="price-filter">
@@ -288,16 +296,25 @@
     <option value="far">15–20 mi Away</option>
   </select>
 
-  <button class="btn-pick" onclick="pickRandom()">Pick For Me!</button>
+  <select id="sort-filter">
+    <option value="dist-asc">Nearest First</option>
+    <option value="dist-desc">Farthest First</option>
+    <option value="name-asc">A → Z</option>
+    <option value="price-asc">Price: Low → High</option>
+    <option value="price-desc">Price: High → Low</option>
+  </select>
+
+  <button class="btn-pick" onclick="pickRandom()">🎲 Pick For Me!</button>
   <button class="btn-clear" onclick="clearPick()">Clear</button>
   <span class="count-badge" id="count-label"></span>
 </div>
 
-<div class="grid-wrap">
+<div class="main">
   <div id="winner-banner">
     <div class="label">Tonight's Pick</div>
     <div class="name" id="winner-name"></div>
     <div class="meta" id="winner-meta"></div>
+    <a id="winner-map" class="map-link" href="#" target="_blank" rel="noopener">Open in Maps →</a>
   </div>
 
   <div class="grid" id="grid"></div>
@@ -305,6 +322,7 @@
     <h3>No restaurants match those filters</h3>
     <p>Try broadening your search.</p>
   </div>
+  <div class="pagination" id="pagination"></div>
 </div>
 
 <script>
@@ -1255,13 +1273,18 @@ const RESTAURANTS = [
   },
 ];
 
-let filtered = [...RESTAURANTS];
+const PAGE_SIZE = 12;
+let filtered = [];
+let currentPage = 1;
 let pickedCard = null;
 
-function render() {
-  const cuisine = document.getElementById('cuisine-filter').value;
-  const price = document.getElementById('price-filter').value;
+const PRICE_ORDER = { '$': 1, '$$': 2, '$$$': 3 };
+
+function applyFiltersAndSort() {
+  const cuisine  = document.getElementById('cuisine-filter').value;
+  const price    = document.getElementById('price-filter').value;
   const distance = document.getElementById('distance-filter').value;
+  const sort     = document.getElementById('sort-filter').value;
 
   filtered = RESTAURANTS.filter(r => {
     const cMatch = cuisine === 'all' || r.cuisine === cuisine;
@@ -1273,7 +1296,20 @@ function render() {
     return cMatch && pMatch && dMatch;
   });
 
-  const grid = document.getElementById('grid');
+  filtered.sort((a, b) => {
+    if (sort === 'dist-asc')   return a.distance - b.distance;
+    if (sort === 'dist-desc')  return b.distance - a.distance;
+    if (sort === 'name-asc')   return a.name.localeCompare(b.name);
+    if (sort === 'price-asc')  return PRICE_ORDER[a.price] - PRICE_ORDER[b.price];
+    if (sort === 'price-desc') return PRICE_ORDER[b.price] - PRICE_ORDER[a.price];
+    return 0;
+  });
+}
+
+function render() {
+  applyFiltersAndSort();
+
+  const grid  = document.getElementById('grid');
   const empty = document.getElementById('empty-state');
   const label = document.getElementById('count-label');
 
@@ -1281,33 +1317,67 @@ function render() {
     grid.innerHTML = '';
     empty.style.display = 'block';
     label.textContent = '0 restaurants';
+    document.getElementById('pagination').innerHTML = '';
     return;
   }
+
   empty.style.display = 'none';
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  currentPage = Math.min(currentPage, totalPages);
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const page  = filtered.slice(start, start + PAGE_SIZE);
+
   label.textContent = `${filtered.length} restaurant${filtered.length !== 1 ? 's' : ''}`;
 
-  grid.innerHTML = filtered.map((r, i) => `
+  grid.innerHTML = page.map((r, i) => `
     <div class="card ${pickedCard && pickedCard.name === r.name ? 'highlighted' : ''}" id="card-${i}">
       <div class="card-top">
         <div class="card-name">${r.name}</div>
         <div class="price">${r.price}</div>
       </div>
-      <div class="tags">
+      <div class="card-meta">
         <span class="tag tag-cuisine">${r.cuisine}</span>
-        <span class="tag tag-dist">${r.distance} mi &nbsp;·&nbsp; ${r.city}</span>
+        <span class="tag tag-dist">${r.distance} mi · ${r.city}</span>
       </div>
       <div class="card-desc">${r.desc}</div>
-      <div class="card-address">
-        <a href="https://maps.google.com/?q=${encodeURIComponent(r.address)}" target="_blank" rel="noopener">
-          ${r.address}
-        </a>
-      </div>
-      <div class="card-footer">
-        <span class="dot-varies">&#9679;</span>
-        <span class="hours">${r.hours}</span>
+      <div class="card-bottom">
+        <div class="card-address">
+          <a href="https://maps.google.com/?q=${encodeURIComponent(r.address)}" target="_blank" rel="noopener">
+            ${r.address}
+          </a>
+        </div>
+        <div class="hours">${r.hours.split(',')[0]}</div>
       </div>
     </div>
   `).join('');
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  const pg = document.getElementById('pagination');
+  if (totalPages <= 1) { pg.innerHTML = ''; return; }
+
+  const cp = currentPage;
+  let html = `<button class="pg-btn" onclick="goPage(${cp-1})" ${cp===1?'disabled':''}>← Prev</button>`;
+
+  const pages = new Set([1, totalPages, cp, cp-1, cp+1].filter(n => n >= 1 && n <= totalPages));
+  const sorted = [...pages].sort((a,b) => a-b);
+  let prev = 0;
+  for (const p of sorted) {
+    if (p - prev > 1) html += `<span class="pg-ellipsis">…</span>`;
+    html += `<button class="pg-btn ${p===cp?'active':''}" onclick="goPage(${p})">${p}</button>`;
+    prev = p;
+  }
+
+  html += `<button class="pg-btn" onclick="goPage(${cp+1})" ${cp===totalPages?'disabled':''}>Next →</button>`;
+  pg.innerHTML = html;
+}
+
+function goPage(n) {
+  currentPage = n;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function pickRandom() {
@@ -1315,30 +1385,33 @@ function pickRandom() {
   const pick = filtered[Math.floor(Math.random() * filtered.length)];
   pickedCard = pick;
 
-  const banner = document.getElementById('winner-banner');
   document.getElementById('winner-name').textContent = pick.name;
   document.getElementById('winner-meta').textContent =
     `${pick.cuisine} · ${pick.city} · ${pick.distance} mi away · ${pick.price}`;
-  banner.classList.add('show');
+  document.getElementById('winner-map').href =
+    `https://maps.google.com/?q=${encodeURIComponent(pick.address)}`;
+  document.getElementById('winner-banner').classList.add('show');
 
+  // Navigate to the page containing the pick
+  const idx = filtered.indexOf(pick);
+  currentPage = Math.floor(idx / PAGE_SIZE) + 1;
   render();
 
-  // Scroll to highlighted card
-  const idx = filtered.indexOf(pick);
-  const el = document.getElementById(`card-${idx}`);
-  if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80);
+  setTimeout(() => {
+    const el = document.getElementById(`card-${idx % PAGE_SIZE}`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 80);
 }
 
 function clearPick() {
   pickedCard = null;
-  const banner = document.getElementById('winner-banner');
-  banner.classList.remove('show');
+  document.getElementById('winner-banner').classList.remove('show');
   render();
 }
 
-document.getElementById('cuisine-filter').addEventListener('change', () => { clearPick(); render(); });
-document.getElementById('price-filter').addEventListener('change', () => { clearPick(); render(); });
-document.getElementById('distance-filter').addEventListener('change', () => { clearPick(); render(); });
+['cuisine-filter','price-filter','distance-filter','sort-filter'].forEach(id => {
+  document.getElementById(id).addEventListener('change', () => { currentPage = 1; clearPick(); render(); });
+});
 
 render();
 </script>
