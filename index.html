@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O'Fallon, MO Restaurant Picker</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --accent: #e8522a;
+      --accent2: #f4a261;
+      --text: #f0f0f0;
+      --muted: #8a8fa8;
+      --border: #2e3250;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a0a05 0%, #2d1508 50%, #1a0a05 100%);
+      border-bottom: 1px solid #3d1f0e;
+      padding: 28px 24px 24px;
+      text-align: center;
+    }
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      color: var(--accent2);
+      letter-spacing: -0.5px;
+    }
+    header p {
+      color: var(--muted);
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+    .pin { font-size: 1.2em; margin-right: 4px; }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    select, button {
+      font-family: inherit;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    select {
+      background: var(--surface2);
+      color: var(--text);
+      padding: 10px 14px;
+      min-width: 160px;
+    }
+    select:focus { outline: none; border-color: var(--accent); }
+
+    .btn-pick {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 11px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      letter-spacing: 0.3px;
+    }
+    .btn-pick:hover { background: #d44520; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,82,42,0.4); }
+    .btn-pick:active { transform: translateY(0); }
+
+    .btn-clear {
+      background: transparent;
+      color: var(--muted);
+      border-color: var(--border);
+      padding: 10px 18px;
+    }
+    .btn-clear:hover { color: var(--text); border-color: var(--muted); }
+
+    .count-badge {
+      font-size: 0.82rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ── Winner Banner ── */
+    #winner-banner {
+      display: none;
+      margin: 24px auto;
+      max-width: 680px;
+      background: linear-gradient(135deg, #2d1508, #3d2010);
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      text-align: center;
+      animation: pop 0.3s ease;
+    }
+    #winner-banner.show { display: block; }
+    @keyframes pop {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    #winner-banner .label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent2);
+      margin-bottom: 6px;
+    }
+    #winner-banner .name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    #winner-banner .meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    /* ── Grid ── */
+    .grid-wrap { padding: 24px; max-width: 1200px; margin: 0 auto; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 18px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      cursor: default;
+      position: relative;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(232,82,42,0.12);
+    }
+    .card.highlighted {
+      border-color: var(--accent2);
+      box-shadow: 0 0 0 2px var(--accent2), 0 6px 24px rgba(244,162,97,0.2);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .card-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .price {
+      font-size: 0.85rem;
+      color: var(--accent2);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      font-size: 0.75rem;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    .tag-cuisine {
+      background: rgba(232,82,42,0.18);
+      color: var(--accent2);
+      border: 1px solid rgba(232,82,42,0.3);
+    }
+    .tag-dist {
+      background: rgba(99,120,220,0.15);
+      color: #8faeff;
+      border: 1px solid rgba(99,120,220,0.25);
+    }
+
+    .card-address {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .card-address a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .card-address a:hover { color: var(--accent2); text-decoration: underline; }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: #9098b1;
+      line-height: 1.55;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .hours {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .dot-open { color: #4ade80; }
+    .dot-varies { color: #facc15; }
+
+    /* ── Empty state ── */
+    .empty {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--muted);
+    }
+    .empty h3 { font-size: 1.2rem; margin-bottom: 8px; color: var(--text); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1><span class="pin">📍</span>O'Fallon, MO Restaurant Picker</h1>
+  <p>Restaurants 15–20 km from O'Fallon &nbsp;·&nbsp; St. Charles County &amp; beyond</p>
+</header>
+
+<div class="controls">
+  <select id="cuisine-filter">
+    <option value="all">All Cuisines</option>
+    <option value="American">American</option>
+    <option value="BBQ">BBQ</option>
+    <option value="Italian">Italian</option>
+    <option value="Mexican">Mexican</option>
+    <option value="Asian">Asian</option>
+    <option value="Seafood">Seafood</option>
+    <option value="Burgers">Burgers</option>
+    <option value="Pub">Pub / Bar</option>
+    <option value="Pizza">Pizza</option>
+    <option value="Steakhouse">Steakhouse</option>
+    <option value="Breakfast">Breakfast</option>
+  </select>
+
+  <select id="price-filter">
+    <option value="all">Any Price</option>
+    <option value="$">$ – Budget</option>
+    <option value="$$">$$ – Moderate</option>
+    <option value="$$$">$$$ – Upscale</option>
+  </select>
+
+  <button class="btn-pick" onclick="pickRandom()">Pick For Me!</button>
+  <button class="btn-clear" onclick="clearPick()">Clear</button>
+  <span class="count-badge" id="count-label"></span>
+</div>
+
+<div class="grid-wrap">
+  <div id="winner-banner">
+    <div class="label">Tonight's Pick</div>
+    <div class="name" id="winner-name"></div>
+    <div class="meta" id="winner-meta"></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty-state" style="display:none">
+    <h3>No restaurants match those filters</h3>
+    <p>Try broadening your search.</p>
+  </div>
+</div>
+
+<script>
+const RESTAURANTS = [
+  {
+    name: "Trailhead Brewing Company",
+    cuisine: "American",
+    price: "$$",
+    distance: 16.2,
+    city: "St. Charles",
+    address: "921 S Riverside Dr, St. Charles, MO 63301",
+    desc: "Local craft brewery and restaurant on the Missouri River with burgers, sandwiches, and house-brewed beers.",
+    hours: "Mon–Sun 11am–11pm",
+  },
+  {
+    name: "Prasino",
+    cuisine: "American",
+    price: "$$$",
+    distance: 17.1,
+    city: "St. Charles",
+    address: "1477 S 5th St, St. Charles, MO 63301",
+    desc: "Farm-to-table American cuisine with a focus on locally sourced, organic ingredients and craft cocktails.",
+    hours: "Tue–Sun 11am–9pm",
+  },
+  {
+    name: "Llywelyn's Pub",
+    cuisine: "Pub",
+    price: "$$",
+    distance: 16.8,
+    city: "St. Charles",
+    address: "1732 Clarkson Rd, Chesterfield, MO 63017",
+    desc: "Classic Welsh-style pub serving shepherd's pie, fish & chips, and a wide selection of draught beers.",
+    hours: "Daily 11am–1:30am",
+  },
+  {
+    name: "Lewis & Clark's Restaurant",
+    cuisine: "American",
+    price: "$$",
+    distance: 15.4,
+    city: "St. Charles",
+    address: "217 S Main St, St. Charles, MO 63301",
+    desc: "Historic riverside restaurant on Main Street with American comfort food, steaks, and a fun Explorer theme.",
+    hours: "Mon–Sun 11am–10pm",
+  },
+  {
+    name: "Big Smoke Burger",
+    cuisine: "Burgers",
+    price: "$",
+    distance: 18.3,
+    city: "Wentzville",
+    address: "1660 Wentzville Pkwy, Wentzville, MO 63385",
+    desc: "Smash burgers made fresh to order with hand-cut fries and house-made sauces.",
+    hours: "Daily 10:30am–9pm",
+  },
+  {
+    name: "Sugarfire Smoke House",
+    cuisine: "BBQ",
+    price: "$$",
+    distance: 19.0,
+    city: "Wentzville",
+    address: "5726 N Hwy 61, Wentzville, MO 63385",
+    desc: "Award-winning St. Louis BBQ joint with slow-smoked brisket, ribs, burnt ends, and creative sides.",
+    hours: "Daily 11am–8pm",
+  },
+  {
+    name: "Pasta House Co.",
+    cuisine: "Italian",
+    price: "$$",
+    distance: 15.9,
+    city: "St. Charles",
+    address: "1380 Bass Pro Dr, St. Charles, MO 63301",
+    desc: "St. Louis Italian staple famous for its house salad dressing, pasta dishes, and toasted ravioli.",
+    hours: "Sun–Thu 11am–9pm, Fri–Sat 11am–10pm",
+  },
+  {
+    name: "Jose Pepper's Mexican Grill",
+    cuisine: "Mexican",
+    price: "$$",
+    distance: 17.6,
+    city: "St. Peters",
+    address: "4560 Mexico Rd, St. Peters, MO 63376",
+    desc: "Lively Mexican grill with generous portions of fajitas, enchiladas, and frozen margaritas.",
+    hours: "Mon–Thu 11am–9pm, Fri–Sat 11am–10pm, Sun 11am–8pm",
+  },
+  {
+    name: "Syberg's Restaurant & Bar",
+    cuisine: "American",
+    price: "$$",
+    distance: 16.5,
+    city: "St. Charles",
+    address: "3591 Veterans Memorial Pkwy, St. Charles, MO 63303",
+    desc: "St. Louis sports bar staple known for crispy chicken wings, cold beer, and a packed game-day atmosphere.",
+    hours: "Daily 11am–1am",
+  },
+  {
+    name: "Crushed Red",
+    cuisine: "Pizza",
+    price: "$$",
+    distance: 18.1,
+    city: "Wentzville",
+    address: "1751 Wentzville Pkwy, Wentzville, MO 63385",
+    desc: "Build-your-own artisan pizza and salads with fresh ingredients on wood-fired or classic crusts.",
+    hours: "Daily 11am–9pm",
+  },
+  {
+    name: "BD's Mongolian Grill",
+    cuisine: "Asian",
+    price: "$$",
+    distance: 16.3,
+    city: "St. Charles",
+    address: "1500 Bass Pro Dr, St. Charles, MO 63301",
+    desc: "Interactive Mongolian-style grill where you choose your proteins, veggies, and sauces cooked on an open fire.",
+    hours: "Mon–Thu 11am–9pm, Fri–Sat 11am–10pm, Sun 12pm–8pm",
+  },
+  {
+    name: "Imo's Pizza",
+    cuisine: "Pizza",
+    price: "$",
+    distance: 15.1,
+    city: "St. Peters",
+    address: "2850 Mexico Rd, St. Peters, MO 63376",
+    desc: "Iconic St. Louis–style thin crust pizza with provel cheese. A local institution since 1964.",
+    hours: "Mon–Thu 11am–10pm, Fri–Sat 11am–11pm, Sun 12pm–10pm",
+  },
+  {
+    name: "Baileys' Range",
+    cuisine: "Burgers",
+    price: "$$",
+    distance: 19.5,
+    city: "Chesterfield",
+    address: "14869 Clayton Rd, Chesterfield, MO 63017",
+    desc: "Premium craft burger bar with hormone-free beef, fresh-baked buns, hand-spun shakes, and local beers.",
+    hours: "Daily 11am–10pm",
+  },
+  {
+    name: "Sapporo Steak & Sushi",
+    cuisine: "Asian",
+    price: "$$$",
+    distance: 17.8,
+    city: "St. Charles",
+    address: "3930 W Clay St, St. Charles, MO 63301",
+    desc: "Hibachi teppanyaki experience with theatrical tableside cooking, sushi rolls, and Japanese cocktails.",
+    hours: "Mon–Sat 11am–10pm, Sun 12pm–9pm",
+  },
+  {
+    name: "McGurk's Irish Pub",
+    cuisine: "Pub",
+    price: "$$",
+    distance: 18.9,
+    city: "St. Charles",
+    address: "1200 S Main St, St. Charles, MO 63301",
+    desc: "Festive Irish pub in the heart of historic Main Street with live music, Guinness on tap, and pub grub.",
+    hours: "Daily 11am–1:30am",
+  },
+  {
+    name: "Olive Garden",
+    cuisine: "Italian",
+    price: "$$",
+    distance: 16.0,
+    city: "St. Peters",
+    address: "4640 Mexico Rd, St. Peters, MO 63376",
+    desc: "Popular Italian chain with endless breadsticks, pasta, soups, and a casual family-friendly atmosphere.",
+    hours: "Mon–Thu 11am–10pm, Fri–Sat 11am–11pm, Sun 11am–10pm",
+  },
+  {
+    name: "Bob Evans",
+    cuisine: "Breakfast",
+    price: "$",
+    distance: 15.5,
+    city: "St. Peters",
+    address: "3920 Veterans Memorial Pkwy, St. Peters, MO 63376",
+    desc: "All-day breakfast and comfort food classics — biscuits & gravy, farm-fresh omelettes, and slow-roasted meats.",
+    hours: "Daily 6am–10pm",
+  },
+  {
+    name: "LongHorn Steakhouse",
+    cuisine: "Steakhouse",
+    price: "$$$",
+    distance: 17.2,
+    city: "Wentzville",
+    address: "1700 Wentzville Pkwy, Wentzville, MO 63385",
+    desc: "Bold, freshly seasoned steaks fire-grilled to perfection in a casual Western-themed setting.",
+    hours: "Mon–Thu 11am–10pm, Fri–Sat 11am–11pm, Sun 11am–10pm",
+  },
+  {
+    name: "Red Lobster",
+    cuisine: "Seafood",
+    price: "$$$",
+    distance: 16.7,
+    city: "St. Peters",
+    address: "4520 Veterans Memorial Pkwy, St. Peters, MO 63376",
+    desc: "Classic seafood chain famous for its Cheddar Bay Biscuits, lobster, shrimp, and fish dishes.",
+    hours: "Mon–Thu 11am–10pm, Fri–Sat 11am–11pm, Sun 11am–10pm",
+  },
+  {
+    name: "Katie's Pizza & Pasta Osteria",
+    cuisine: "Italian",
+    price: "$$$",
+    distance: 19.8,
+    city: "Chesterfield",
+    address: "14152 Clayton Rd, Chesterfield, MO 63017",
+    desc: "Award-winning neighborhood osteria with wood-fired Neapolitan pizza, handmade pasta, and local ingredients.",
+    hours: "Tue–Fri 11am–9pm, Sat–Sun 10am–9pm",
+  },
+  {
+    name: "Fuzzy's Taco Shop",
+    cuisine: "Mexican",
+    price: "$",
+    distance: 18.5,
+    city: "Wentzville",
+    address: "1756 Wentzville Pkwy, Wentzville, MO 63385",
+    desc: "Casual Baja-style tacos, burritos, nachos, and frozen margaritas in a laid-back atmosphere.",
+    hours: "Daily 7am–10pm",
+  },
+  {
+    name: "Frank & Helen's Pizzeria",
+    cuisine: "Pizza",
+    price: "$",
+    distance: 15.6,
+    city: "St. Charles",
+    address: "3150 Elm Point Industrial Dr, St. Charles, MO 63301",
+    desc: "St. Louis–style thin-crust pizzeria that's been a local staple for decades. Known for perfectly crisp pies.",
+    hours: "Tue–Sun 4pm–9pm",
+  },
+  {
+    name: "Texas de Brazil",
+    cuisine: "Steakhouse",
+    price: "$$$",
+    distance: 19.2,
+    city: "Chesterfield",
+    address: "249 Chesterfield Mall, Chesterfield, MO 63017",
+    desc: "Brazilian churrascaria featuring continuous tableside service of fire-roasted meats and an expansive salad bar.",
+    hours: "Mon–Fri 11am–2pm & 5pm–10pm, Sat 12pm–10pm, Sun 11am–9pm",
+  },
+  {
+    name: "Pi Pizzeria",
+    cuisine: "Pizza",
+    price: "$$",
+    distance: 18.7,
+    city: "Chesterfield",
+    address: "200 Chesterfield Mall, Chesterfield, MO 63017",
+    desc: "St. Louis deep-dish and thin-crust pizzas with organic ingredients, famous for putting St. Louis pizza on the map.",
+    hours: "Mon–Thu 11am–10pm, Fri–Sat 11am–11pm, Sun 11am–10pm",
+  },
+  {
+    name: "O'Charley's",
+    cuisine: "American",
+    price: "$$",
+    distance: 17.4,
+    city: "St. Peters",
+    address: "4558 Veterans Memorial Pkwy, St. Peters, MO 63376",
+    desc: "Friendly American casual dining with hearty portions, free pie Wednesday, and classic comfort food.",
+    hours: "Daily 11am–10pm",
+  },
+];
+
+let filtered = [...RESTAURANTS];
+let pickedCard = null;
+
+function render() {
+  const cuisine = document.getElementById('cuisine-filter').value;
+  const price = document.getElementById('price-filter').value;
+
+  filtered = RESTAURANTS.filter(r => {
+    const cMatch = cuisine === 'all' || r.cuisine === cuisine;
+    const pMatch = price === 'all' || r.price === price;
+    return cMatch && pMatch;
+  });
+
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty-state');
+  const label = document.getElementById('count-label');
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    label.textContent = '0 restaurants';
+    return;
+  }
+  empty.style.display = 'none';
+  label.textContent = `${filtered.length} restaurant${filtered.length !== 1 ? 's' : ''}`;
+
+  grid.innerHTML = filtered.map((r, i) => `
+    <div class="card ${pickedCard && pickedCard.name === r.name ? 'highlighted' : ''}" id="card-${i}">
+      <div class="card-top">
+        <div class="card-name">${r.name}</div>
+        <div class="price">${r.price}</div>
+      </div>
+      <div class="tags">
+        <span class="tag tag-cuisine">${r.cuisine}</span>
+        <span class="tag tag-dist">${r.distance} km &nbsp;·&nbsp; ${r.city}</span>
+      </div>
+      <div class="card-desc">${r.desc}</div>
+      <div class="card-address">
+        <a href="https://maps.google.com/?q=${encodeURIComponent(r.address)}" target="_blank" rel="noopener">
+          ${r.address}
+        </a>
+      </div>
+      <div class="card-footer">
+        <span class="dot-varies">&#9679;</span>
+        <span class="hours">${r.hours}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function pickRandom() {
+  if (filtered.length === 0) return;
+  const pick = filtered[Math.floor(Math.random() * filtered.length)];
+  pickedCard = pick;
+
+  const banner = document.getElementById('winner-banner');
+  document.getElementById('winner-name').textContent = pick.name;
+  document.getElementById('winner-meta').textContent =
+    `${pick.cuisine} · ${pick.city} · ${pick.distance} km away · ${pick.price}`;
+  banner.classList.add('show');
+
+  render();
+
+  // Scroll to highlighted card
+  const idx = filtered.indexOf(pick);
+  const el = document.getElementById(`card-${idx}`);
+  if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80);
+}
+
+function clearPick() {
+  pickedCard = null;
+  const banner = document.getElementById('winner-banner');
+  banner.classList.remove('show');
+  render();
+}
+
+document.getElementById('cuisine-filter').addEventListener('change', () => { clearPick(); render(); });
+document.getElementById('price-filter').addEventListener('change', () => { clearPick(); render(); });
+
+render();
+</script>
+</body>
+</html>
