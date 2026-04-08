@@ -1342,8 +1342,8 @@ function render() {
       <div class="card-desc">${r.desc}</div>
       <div class="card-bottom">
         <div class="card-address">
-          <a href="https://maps.google.com/?q=${encodeURIComponent(r.address)}" target="_blank" rel="noopener">
-            ${r.address}
+          <a href="https://maps.google.com/?q=${encodeURIComponent(r.name + ' ' + r.city + ' MO')}" target="_blank" rel="noopener">
+            View on Maps
           </a>
         </div>
         <div class="hours">${r.hours.split(',')[0]}</div>
@@ -1389,7 +1389,7 @@ function pickRandom() {
   document.getElementById('winner-meta').textContent =
     `${pick.cuisine} · ${pick.city} · ${pick.distance} mi away · ${pick.price}`;
   document.getElementById('winner-map').href =
-    `https://maps.google.com/?q=${encodeURIComponent(pick.address)}`;
+    `https://maps.google.com/?q=${encodeURIComponent(pick.name + ' ' + pick.city + ' MO')}`;
   document.getElementById('winner-banner').classList.add('show');
 
   // Navigate to the page containing the pick
