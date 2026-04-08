@@ -255,7 +255,7 @@
 
 <header>
   <h1><span class="pin">📍</span>O'Fallon, MO Restaurant Picker</h1>
-  <p>Restaurants 15–20 miles from O'Fallon &nbsp;·&nbsp; Chesterfield, Ballwin, Wentzville &amp; beyond</p>
+  <p>O'Fallon, MO &amp; surrounding area &nbsp;·&nbsp; Local spots to 20 miles out</p>
 </header>
 
 <div class="controls">
@@ -279,6 +279,13 @@
     <option value="$">$ – Budget</option>
     <option value="$$">$$ – Moderate</option>
     <option value="$$$">$$$ – Upscale</option>
+  </select>
+
+  <select id="distance-filter">
+    <option value="all">Any Distance</option>
+    <option value="local">In O'Fallon (0–8 mi)</option>
+    <option value="near">Nearby (8–15 mi)</option>
+    <option value="far">15–20 mi Away</option>
   </select>
 
   <button class="btn-pick" onclick="pickRandom()">Pick For Me!</button>
@@ -557,6 +564,137 @@ const RESTAURANTS = [
     desc: "Hometown craft brewery taproom pouring seasonal and flagship ales, IPAs, and stouts alongside bar snacks.",
     hours: "Thu–Fri 4pm–10pm, Sat 12pm–10pm, Sun 12pm–6pm",
   },
+  // ── In O'Fallon (~0–8 mi) ────────────────────────────────────────────
+  {
+    name: "Dewey's Pizza",
+    cuisine: "Pizza",
+    price: "$$",
+    distance: 1.2,
+    city: "O'Fallon",
+    address: "2120 Bluestone Dr, St. Charles, MO 63303",
+    desc: "Craft pizza with inventive seasonal toppings, a crackerlike thin crust, and a rotating selection of local beers.",
+    hours: "Mon–Thu 11am–9pm, Fri–Sat 11am–10pm, Sun 11am–9pm",
+  },
+  {
+    name: "Bandanas Bar-B-Q",
+    cuisine: "BBQ",
+    price: "$",
+    distance: 2.1,
+    city: "O'Fallon",
+    address: "2120 Highway K, O'Fallon, MO 63368",
+    desc: "Casual St. Louis BBQ staple with fall-off-the-bone ribs, smoked brisket, and generous combo platters.",
+    hours: "Mon–Thu 11am–9pm, Fri–Sat 11am–9:30pm, Sun 11am–8:30pm",
+  },
+  {
+    name: "Syberg's Restaurant & Bar",
+    cuisine: "American",
+    price: "$$",
+    distance: 1.8,
+    city: "O'Fallon",
+    address: "1000 Regency Pkwy, O'Fallon, MO 63366",
+    desc: "St. Louis sports bar staple known for crispy chicken wings, ice-cold beer, and a lively game-day atmosphere.",
+    hours: "Daily 11am–1am",
+  },
+  {
+    name: "Peel Wood Fired Pizza",
+    cuisine: "Pizza",
+    price: "$$",
+    distance: 2.8,
+    city: "O'Fallon",
+    address: "3025 Highway K, O'Fallon, MO 63368",
+    desc: "Neapolitan-style wood-fired pizzas made with house-stretched dough and locally sourced seasonal toppings.",
+    hours: "Mon–Thu 11am–9pm, Fri–Sat 11am–10pm, Sun 12pm–8pm",
+  },
+  {
+    name: "Steak 'n Shake",
+    cuisine: "Burgers",
+    price: "$",
+    distance: 2.5,
+    city: "O'Fallon",
+    address: "150 Pump House Rd, O'Fallon, MO 63366",
+    desc: "St. Louis–born chain famous for thin steakburgers, hand-dipped milkshakes, and late-night hours.",
+    hours: "Daily 24 hours",
+  },
+  {
+    name: "Buffalo Wild Wings",
+    cuisine: "American",
+    price: "$$",
+    distance: 3.1,
+    city: "O'Fallon",
+    address: "403 Regency Pkwy, O'Fallon, MO 63366",
+    desc: "Classic sports bar chain with 20+ wing sauces, plenty of TVs, cold drafts, and game-day specials.",
+    hours: "Mon–Thu 11am–12am, Fri–Sat 11am–1am, Sun 11am–11pm",
+  },
+  {
+    name: "McAlister's Deli",
+    cuisine: "American",
+    price: "$",
+    distance: 2.2,
+    city: "O'Fallon",
+    address: "2000 Bluestone Dr, O'Fallon, MO 63366",
+    desc: "Fast-casual deli with overstuffed sandwiches, giant sweet teas, loaded spuds, and fresh-baked cookies.",
+    hours: "Daily 10:30am–10pm",
+  },
+  {
+    name: "Logan's Roadhouse",
+    cuisine: "Steakhouse",
+    price: "$$",
+    distance: 3.9,
+    city: "O'Fallon",
+    address: "100 Caledonia Dr, O'Fallon, MO 63366",
+    desc: "Casual roadhouse steakhouse with hand-cut steaks, fresh-baked rolls, cold beer buckets, and peanuts on the table.",
+    hours: "Mon–Thu 11am–10pm, Fri–Sat 11am–11pm, Sun 11am–9pm",
+  },
+  {
+    name: "O'Fallon Winery",
+    cuisine: "American",
+    price: "$$",
+    distance: 4.5,
+    city: "O'Fallon",
+    address: "18 S Main St, O'Fallon, MO 63366",
+    desc: "Charming local winery with a menu of flatbreads, charcuterie, and light bites paired with estate and Missouri wines.",
+    hours: "Wed–Thu 4pm–9pm, Fri 3pm–10pm, Sat 12pm–10pm, Sun 12pm–6pm",
+  },
+  {
+    name: "Chili's Grill & Bar",
+    cuisine: "American",
+    price: "$",
+    distance: 4.2,
+    city: "O'Fallon",
+    address: "3795 Veterans Memorial Pkwy, O'Fallon, MO 63366",
+    desc: "Casual American chain known for baby back ribs, Big Mouth Burgers, Presidente Margaritas, and skillet queso.",
+    hours: "Mon–Thu 11am–10pm, Fri–Sat 11am–11pm, Sun 11am–10pm",
+  },
+  {
+    name: "Mission Taco Joint",
+    cuisine: "Mexican",
+    price: "$$",
+    distance: 3.7,
+    city: "O'Fallon",
+    address: "3630 Highway K, O'Fallon, MO 63368",
+    desc: "Hip St. Louis taco concept with creative fillings, house-made salsas, craft margaritas, and local draft beers.",
+    hours: "Mon–Thu 11am–10pm, Fri–Sat 11am–11pm, Sun 11am–9pm",
+  },
+  {
+    name: "Wasabi O'Fallon",
+    cuisine: "Asian",
+    price: "$$",
+    distance: 5.0,
+    city: "O'Fallon",
+    address: "1850 Zumbehl Rd, O'Fallon, MO 63303",
+    desc: "Popular local sushi bar with fresh rolls, sashimi, hibachi entrées, and a full cocktail menu.",
+    hours: "Mon–Sat 11am–10pm, Sun 12pm–9pm",
+  },
+  {
+    name: "Applebee's",
+    cuisine: "American",
+    price: "$",
+    distance: 3.4,
+    city: "O'Fallon",
+    address: "315 Regency Pkwy, O'Fallon, MO 63366",
+    desc: "Neighborhood grill with all-day deals, a full bar, and American comfort classics from burgers to riblets.",
+    hours: "Mon–Thu 11am–12am, Fri–Sat 11am–1am, Sun 11am–11pm",
+  },
 ];
 
 let filtered = [...RESTAURANTS];
@@ -565,11 +703,16 @@ let pickedCard = null;
 function render() {
   const cuisine = document.getElementById('cuisine-filter').value;
   const price = document.getElementById('price-filter').value;
+  const distance = document.getElementById('distance-filter').value;
 
   filtered = RESTAURANTS.filter(r => {
     const cMatch = cuisine === 'all' || r.cuisine === cuisine;
     const pMatch = price === 'all' || r.price === price;
-    return cMatch && pMatch;
+    const dMatch = distance === 'all'
+      || (distance === 'local' && r.distance <= 8)
+      || (distance === 'near'  && r.distance > 8  && r.distance <= 15)
+      || (distance === 'far'   && r.distance > 15 && r.distance <= 20);
+    return cMatch && pMatch && dMatch;
   });
 
   const grid = document.getElementById('grid');
@@ -637,6 +780,7 @@ function clearPick() {
 
 document.getElementById('cuisine-filter').addEventListener('change', () => { clearPick(); render(); });
 document.getElementById('price-filter').addEventListener('change', () => { clearPick(); render(); });
+document.getElementById('distance-filter').addEventListener('change', () => { clearPick(); render(); });
 
 render();
 </script>
